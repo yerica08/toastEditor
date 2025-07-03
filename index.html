@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+      <!-- 
+         << CSP(Content-Security-Policy) >>
+         : CSP는 브라우저에게 스크립트, 스타일, 이미지 등을 어디서 어떻게 불러올 수 있는지를 지시하는 보안 헤더예요.
+           DOMPurify 같은 HTML 필터링을 우회해서 공격자가 <script>를 삽입해도, **브라우저가 실행을 막아버릴 수 있는 “브라우저 차원의 방어선”**입니다.
+
+         📌 주요 목적:
+            * XSS 공격 시도 차단 (<script>, onerror, eval, data: 등)
+            * 외부 리소스 로드 제한 (cdn, iframe, 이미지 등)
+            * 인라인 스크립트/스타일 제한 (style="...", <script>alert() 등)
+
+         ex) 예시 CSP 설정(추천 구성)
+            <meta http-equiv="Content-Security-Policy" content="
+              default-src 'self';
+              script-src 'self';
+              style-src 'self' 'unsafe-inline';
+              img-src 'self' data:;
+              object-src 'none';
+            "> 
+         
+         ✅ content 내부 디렉티브//의미
+            1. default-src 'self' // 기본 소스는 현재 도메인만 허용
+            2. script-src 'self' // 외부 JS 불허 (cdn, XSS 차단 효과 있음)
+            3. style-src 'self' 'unsafe-inline' // 외부 스타일 불허, 인라인은 예외적으로 허용
+            4. img-src 'self' data: // 이미지에 data URL 허용
+            5. object-src 'none'	// object, embed 금지
+            6. base-uri 'none' // <base> 태그 금지
+            7. frame-ancestors 'none' // 이 페이지를 다른 iframe에서 못 불러옴
+
+         🔒 인라인 스크립트(onclick, eval, <script>)는 unsafe-inline이 없으면 전부 차단됩니다. 가능하면 인라인 사용을 피하세요.
+         
+         +) DOMPurify 외에 자주 함께 사용하는 보안 필터링
+            1. CSP : DOMPurify와 가장 자주 함께 쓰이며, 실행 자체를 막는 보안책
+            2. X-XSS-Protection (구형) : 일부 오래된 브라우저에서 XSS 필터 활성화 (지금은 대부분 CSP로 대체됨)
+            3. iframe sandbox	: 유저 콘텐츠를 iframe으로 분리 렌더링 (sandbox 속성으로 JS 격리 가능)
+            4. 서버 필터링 : 서버에서도 sanitize (예: Python → bleach, PHP → HTMLPurifier, Java → OWASP Java HTML Sanitizer)
+            5. WAF(Web Application Firewall) : 클라우드플레어, AWS WAF 등에서 공격 시그니처 탐지 후 차단
+            6. Rate Limiting / Captcha	: 악성 스팸성 HTML 입력 자체를 차단 (봇 차단 목적)
+         
+         +) 실무에서 많이 하는 구성(다층 방어)
+            1. 사용자 입력 시: DOMPurify.sanitize + Hook → 일차 정제
+            2. 저장 전 서버 측 sanitize (선택)
+            3. 렌더링 시 DOMPurify 한 번 더
+            4. CSP 정책 설정 → 실행 차단
+            5. iframe sandbox 사용 (커뮤니티, 블로그 등)
+            6. WAF + Bot 차단 → 대량 XSS 시도 탐지
+      -->
+      <title>Toast UI Plugin Test</title>
+      <!-- Editor CSS -->
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.5/toastui-editor.min.css" /> -->
+      <link rel="stylesheet" href="./src/toast/css/toast-editor.min.css"/>
+      <!-- Plugin CSS -->
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css" /> -->
+      <!-- prismjs Languages -->
+      <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" /> -->
+      <!-- code syntax highlight -->
+      <!-- <link
+         rel="stylesheet"
+         href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+      /> -->
+      <!-- Color Picker -->
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.css" /> -->
+      <!-- color syntax -->
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" /> -->
+      <link rel="stylesheet" href="./src/toast/css/toast-plugin.min.css"/>
+
+      <!-- TOAST UI Image Editor -->
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.min.css" /> -->
+      <link rel="stylesheet" href="./src/toast/css/tui-image-editor.min.css"/>
+      <style>
+         .tui-image-editor-container .tui-image-editor-controls-logo,
+         .tui-image-editor-container .tui-image-editor-header-logo {
+            display: none !important;
+         }
+         #viewer iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+         }
+      </style>
+   </head>
+   <body>
+      <button type="button" id="send">저장</button>
+      <div id="editor"></div>
+      <div id="image-editor-container" style="display: none"></div>
+      <div id="viewer"></div>
+
+      <!-- Color Picker -->
+      <!-- <script src="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.js"></script> -->
+      <script src="./src/toast/src/tui-color-picker.min.js"></script>
+      <!-- ✅ Core Editor -->
+      <!-- <script src="https://uicdn.toast.com/editor/3.1.5/toastui-editor-all.min.js"></script>
+      <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script> -->
+      <script src="./src/toast/src/toastui-editor-all.min.js"></script>
+      <script src="./src/toast/src/ko-kr.js"></script>
+      <!-- dompurify -->
+      <script src="./src/dompurify/purify.min.js"></script>
+      <!-- ✅ Plugin -->
+      <!-- <script src="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.js"></script> -->
+      <script src="./src/toast/src/plugin-tableMargedCell.min.js"></script>
+      <!-- prismjs Languages -->
+      <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-clojure.min.js"></script> -->
+      <script src="./src/toast/src/prism.min.js"></script>
+      <script src="./src/toast/src/prism-clojure.min.js"></script>
+      <!-- code syntax highlight -->
+      <!-- <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script> -->
+      <script src="./src/toast/src/plugin-codeSyntaxHighlightAll.min.js"></script>
+      <!-- color syntax -->
+      <!-- <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script> -->
+      <script src="./src/toast/src/plugin-colorSyntax.min.js"></script>
+      <!-- TOAST UI Image Editor -->
+      <!-- <script src="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.min.js"></script> -->
+      <!-- 몇가지 언어 한국어로 변경 및 download 대신 toast 에디터에 삽입으로 수정 -->
+      <script src="./src/toast/src/tui-image-editor.min.js"></script>
+      <script>
+         DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+            if (data.attrName === 'style' && /expression\s*\(/i.test(data.attrValue)) {
+               data.keepAttr = false;
+            }
+
+            if (data.attrName === 'src' && /^data:(text\/html|image\/svg)/i.test(data.attrValue)) {
+               data.keepAttr = false;
+            }
+
+            /*
+               rel="noopener": 새 창이 window.opener를 통해 부모 페이지를 조작하는 걸 막음.(탭 납치 예방)
+               rel="noreferrer": 새 창에 부모 페이지 주소(Referrer) 를 안 넘김.
+                                 즉, 이번 페이지주소가 전송되지 않기 때문에 프라이버시나 민감한 url을 새 창에 노출시키지 않음
+                                 그렇기 때문에, 외부 사이트에 개인정보/비공개 주소를 노출시키면 안되거나, 외부 파트너에게 트래픽 경로를 숨시고 싶을 때, 강력한 보안이 필요한 경우 사용됨.
+                                 
+               즉, 악성 링크가 window.opener.location = 'phishing.com' 같은 식으로 피싱 공격을 하는 걸 방지.
+
+               noreferrer가 noopener의 기능도 포함하고 있음.
+
+               ✅ 실무 상황별 정리표
+               🔐 외부 사이트로 나가는 새 창 링크 (<a href="...">)
+                  :  noopener	/ 탭 납치 방지. 외부에서 내 탭 조작 못하게 함.
+               🔐 외부 사이트로 가되 내 URL을 숨기고 싶음	
+                  : noreferrer / Referer 제거 + opener 제거. 개인정보 보호.
+               📊 유입 경로 분석(GA 등) 필요
+                  :noopener / opener는 제거하되, Referer는 유지해야 분석 가능.
+                            사내 시스템 또는 민감한 경로에서 외부로 이동할 때	noreferrer	내 시스템 주소 노출 막기 (ex: 인증 토큰 포함 URL).
+               🧩 iframe 안에서 Viewer 등 콘텐츠 출력
+                  : noopener 또는 없음 / noreferrer는 링크 작동안할 수 있음 (주의).
+               📚 위젯, 임베드 코드, 커뮤니티 게시물 등 유저 콘텐츠에 포함된 링크
+                  : noopener noreferrer / 보안 최우선. 유저 콘텐츠는 항상 위험 가능성 있음.
+               ✅ 내부 링크 (<a href="/about">)
+                  : 없음 / 같은 도메인이므로 opener 문제 없음. 성능상 불필요.
+
+            */
+            if (node.tagName === 'A') {
+               node.setAttribute('rel', 'noreferrer');
+            }
+         });
+         let imageEditor = null;
+         const { Editor } = toastui;
+         const { tableMergedCell, codeSyntaxHighlight, colorSyntax } = Editor.plugin;
+
+         // 이미지 에디터 미리 만들어놓기
+         const container = document.getElementById('image-editor-container');
+         imageEditor = new tui.ImageEditor(container, {
+            includeUI: {
+               loadImage: {
+                  path: '', // 초기엔 비워두고, 나중에 이미지만 변경
+                  name: '',
+               },
+               menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'text'],
+               initMenu: 'crop',
+               uiSize: {
+                  width: '1000px',
+                  height: '700px',
+               },
+               menuBarPosition: 'bottom',
+            },
+            cssMaxWidth: 700,
+            cssMaxHeight: 500,
+            selectionStyle: {
+               cornerSize: 20,
+               rotatingPointOffset: 70,
+            },
+         });
+
+         const editor = new Editor({
+            el: document.querySelector('#editor'),
+            height: '500px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+            language: 'ko-KR',
+            initialValue: '',
+            plugins: [tableMergedCell, codeSyntaxHighlight, colorSyntax],
+            customHTMLSanitizer: (html) => {
+               return DOMPurify.sanitize(html);
+            },
+
+            // addImageBlobHook : 이미지 업로드 로직 커스텀
+            /*
+               참고 링크
+               1) 자바로 디스크에 이미지 파일 저장하고 불러오기 : https://congsong.tistory.com/68#3.-addimageblobhook%EC%9C%BC%EB%A1%9C%C2%A0%EC%9D%B4%EB%AF%B8%EC%A7%80%C2%A0%EC%97%85%EB%A1%9C%EB%93%9C%C2%A0%EB%A1%9C%EC%A7%81%C2%A0%EC%BB%A4%EC%8A%A4%ED%85%80%ED%95%98%EA%B8%B0
+               2) 이미지 첨부로직을 base64 에서 파일 객체를 S3에 저장하고 S3 url 주소를 가져오는 방법 : https://leego.tistory.com/entry/Toast-UI-Editor-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B2%A8%EB%B6%80%ED%95%98%EA%B8%B0
+            */
+            hooks: {
+               async addImageBlobHook(blob, callback) {
+                  /*
+                           1. blob
+                           : 업로드된 이미지의 정보를 가진 파일 객체로, 날짜/이름/사이즈/타입 등의 정보를 가지고 있음.
+
+                           2. callback
+                           : 에디터 내부 실행 로직의 일부인 함수(아래 코드)가 반환되는데, 호출 시 에디터에 이미지를 추가하는 역할을 함
+
+                           this.props.eventEmitter.emit("addImageBlobHook", o, (function(e, r) {
+                               return t.props.execCommand("addImage", {
+                                   imageUrl: e,
+                                   altText: r || n.value
+                               })
+                           }
+                           ), "ui")
+                        */
+
+                  // 서버에 이미지를 저장할 경우
+                  /*
+                        try {
+                           // 1. 에디터에 업로드한 이미지를 FormData 객체에 저장
+                           // (이때, 컨트롤러 uploadEditorImage 메서드의 파라미터인 'image'와 formData에 append 하는 key('image')값은 동일해야 함)
+
+                           const formData = new FormData();
+                           formData.append('image', blob);
+
+                           // 2. FileApiController - uploadEditorImage 메서드 호출
+                           const response = await fetch('./img', {
+                              method: 'POST',
+                              body: formData,
+                           });
+
+                           // 3. 컨트롤러에서 전달받은 디스크에 저장된 파일명
+                           const filename = await response.text();
+                           console.log('서버에 저장된 파일명 : ', filename);
+
+                           // 4. addImageBlobHook의 callback 함수를 통해, 디스크에 저장된 이미지를 에디터에 렌더링
+                           const imageUrl = `./img/image-print?filename=${filename}`;
+                           callback(imageUrl, 'image alt attribute');
+                        } catch (error) {
+                           console.error('업로드 실패 : ', error);
+                        }
+                     */
+
+                  // viewer에 제대로 들어가는지 테스트, base64로 인코딩해서 마크다운으로 삽입(비추천 용량증가)
+
+                  /* 1) 간단한 버전
+                     const reader = new FileReader();
+
+                     reader.onload = () => {
+                        const dataUrl = reader.result; // base64 인코딩된 이미지 URL
+                        callback(dataUrl, 'image alt attribute', 'markdown');
+                     };
+
+                     reader.readAsDataURL(blob); // base64로 변환
+                     */
+                  /* 2) toast image editor 연결 */
+                  // blob을 base64로 변환
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                     const container = document.getElementById('image-editor-container');
+                     if (container) container.style.display = 'block';
+
+                     if (imageEditor && imageEditor.ui) {
+                        imageEditor.ui._editorCallback = callback;
+                        imageEditor.ui._imageEditorInstance = imageEditor;
+                        imageEditor.ui._containerElement = container;
+                     }
+
+                     imageEditor.ui._addDownloadEvent();
+
+                     imageEditor.loadImageFromURL(reader.result, '편집 이미지').then(() => {
+                        imageEditor.clearUndoStack();
+                        imageEditor.clearRedoStack();
+                     });
+                  };
+                  reader.readAsDataURL(blob);
+               },
+            },
+         });
+         document.getElementById('send').addEventListener('click', () => {
+            const dirty = editor.getMarkdown();
+            const sanitized = encodeURIComponent(DOMPurify.sanitize(dirty));
+            /*const content = DOMPurify.sanitize(dirty);
+
+            const viewer = new Editor.factory({
+               el: document.querySelector('#viewer'),
+               height: '500px',
+               viewer: true,
+               initialValue: content,
+               plugins: [tableMergedCell, codeSyntaxHighlight, colorSyntax],
+            });*/
+
+            /*
+               <<  iframe sandbox 설정 >>
+
+               ✅ sandbox 옵션 상세 목록
+                  1. allow-scripts : JS 실행 허용 (Viewer 작동에 필수)
+                  2. allow-same-origin : iframe 내부 JS에서 document.cookie, localStorage 등 동일 출처 접근 허용
+                  3. allow-forms : <form> 제출 허용
+                  4. allow-popups : window.open() 가능
+                  5. allow-modals : alert(), confirm(), prompt() 사용 가능
+                  6. allow-presentation : 프레젠테이션 API 허용 (잘 안 씀)
+                  7. allow-downloads : <a download> 허용
+                  8. allow-top-navigation: iframe 안에서 window.top.location 변경 가능 (위험!)
+                  9. allow-top-navigation-by-user-activation : 유저 클릭 시만 상위 페이지 이동 가능
+               
+               🔐 고급 설정 추천: 최소 권한 조합
+
+               1) 가장 추천하는 보안 설정
+                  sandbox="allow-scripts allow-same-origin"
+               : iframe 안에서 form 제출, window.open(), 팝업(alert, confirm 등), 상위 페이지로 리디렉션이 불가능해지고 ➡️ 콘텐츠 렌더링만 가능하게 제한.
+               
+               2) 만약 viewer 안에서 특정 기능이 필요하다면
+                  a. 이미지 다운로드 필요할 때: sandbox="allow-scripts allow-same-origin allow-downloads"
+                  b. Viewer 내부에서 링크 열기(window.open 등) 허용: sandbox="allow-scripts allow-same-origin allow-popups"
+                  c. alert/prompt 사용 필요할 때: sandbox="allow-scripts allow-same-origin allow-modals"
+               
+               ✅ 왜 안전한가?
+               ▶ 1. sandbox가 iframe을 "감옥"처럼 만듭니다
+                  sandbox="allow-scripts allow-same-origin" 설정을 주면:
+                  ❌ 부모 페이지의 DOM 접근 불가	window.parent, top, opener 등에 접근 불가
+                  ❌ 쿠키, localStorage 공유 안 됨	독립된 origin처럼 작동 (동일 도메인이어도 안전)
+                  ❌ 부모 페이지 리디렉션 불가	top.location = ... 차단됨
+                  ❌ JS 실행은 iframe 안에서만	viewer 내부의 script만 실행됨
+                  ✅ XSS 실행되더라도 격리됨	공격자는 iframe 내부에서만 영향 가능
+
+                  💡 즉, 악성 스크립트가 viewer 안에서 실행된다 해도, viewer 바깥에는 절대 못 벗어나요.
+
+               ▶ 2. DOMPurify로 1차 방어
+                  악성 HTML, <script>, onerror, javascript: 등 대부분 필터링
+                  
+                  예외적으로 뚫릴 수 있는 style="expression(...)" 등도 hook으로 제거
+                  
+                  → XSS를 거의 원천 차단
+            */
+            const viewer = document.getElementById('viewer');
+            viewer.innerHTML = ''; // 초기화
+
+            const frame = document.createElement('iframe');
+            frame.id = 'viewerFrame';
+            frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin allow-top-navigation-by-user-activation');
+            // 완전히 다른 서버를 가져와서 viewer.html 을 띄운 다음 allow-same-origin속성을 빼는 것이 안전(현재 liver-server는 자동으로 인라인 스크립트를 추가해서 어쩔수 없음)
+            frame.src = `./pages/viewer.html`;
+
+            viewer.appendChild(frame);
+
+            frame.onload = () => {
+               frame.contentWindow.postMessage(
+                  {
+                     type: 'render',
+                     content: sanitized,
+                  },
+                  '*'
+               );
+            };
+         });
+      </script>
+   </body>
+</html>
