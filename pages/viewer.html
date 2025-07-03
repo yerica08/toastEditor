@@ -3,32 +3,35 @@
    <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <!-- <meta
+      <meta
          http-equiv="Content-Security-Policy"
          content="
   default-src 'self';
-  script-src 'self' https://uicdn.toast.com https://cdnjs.cloudflare.com;
-  style-src 'self' https://uicdn.toast.com https://cdnjs.cloudflare.com 'unsafe-inline';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
   img-src 'self' data:;
   object-src 'none';
 "
-      /> -->
+      />
 
       <title>Document</title>
-      <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.5/toastui-editor.min.css" />
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.1.5/toastui-editor.min.css" /> -->
+      <link rel="stylesheet" href="../src/toast/css/toast-editor.min.css"/>
       <!-- ✅ PrismJS Syntax Highlight -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
+      <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
       <link
          rel="stylesheet"
          href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
-      />
+      /> -->
 
       <!-- ✅ Table Merged Cell Plugin -->
-      <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css" />
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.css" /> -->
 
       <!-- ✅ Color Syntax Plugin -->
-      <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.css" />
-      <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" />
+      <!-- <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.css" />
+      <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" /> -->
+      <link rel="stylesheet" href="../src/toast/css/toast-plugin.min.css"/>
+
       <style>
          body {
             margin: 0;
@@ -43,15 +46,22 @@
    </head>
    <body>
       <div id="viewer"></div>
-      <script src="https://uicdn.toast.com/editor/3.1.5/toastui-editor-all.min.js"></script>
+      <!-- <script src="https://uicdn.toast.com/editor/3.1.5/toastui-editor-all.min.js"></script> -->
+      <script src="../src/toast/src/toastui-editor-all.min.js"></script>
       <!-- ✅ Plugins -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+      <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-clojure.min.js"></script>
       <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
       <script src="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.js"></script>
-      <script src="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.js"></script>
-      <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script>
+      <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script> -->
 
+      <script src="../src/toast/src/prism.min.js"></script>
+      <script src="../src/toast/src/prism-clojure.min.js"></script>
+      <script src="../src/toast/src/plugin-tableMargedCell.min.js"></script>
+      <script src="../src/toast/src/tui-color-picker.min.js"></script>
+      <script src="../src/toast/src/plugin-codeSyntaxHighlightAll.min.js"></script>
+      <script src="../src/toast/src/plugin-colorSyntax.min.js"></script>
+      
       <!-- ✅ Viewer 초기화 -->
       <script src="../src/viewer.js" defer></script>
    </body>
