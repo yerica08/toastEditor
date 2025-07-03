@@ -157,7 +157,7 @@ DOMPurify 같은 HTML 필터링을 우회해서 공격자가 `<script>`를 삽�
 
 ---
 
-### 왜 viewer.js를 인라인으로 작성하지 않았는가?
+### ❓ viewer.js를 인라인으로 작성하지 않은 이유
 
 - **CSP 정책 위반 방지**: `script-src 'self'` 설정이 되어 있을 때 `<script>...</script>` 같은 인라인 JS는 차단됩니다.
 - 따라서 외부 JS 파일로 분리해야 CSP에 위배되지 않으며, 실무에서도 자주 사용되는 방식입니다.
@@ -218,7 +218,7 @@ window.addEventListener('message', (event) => {
 
 ## 📚 참고
 
-- 더 자세한 내용은 docs 파일 참고
+- 작성된 내용의 추가 설명은 docs 파일을 참고바랍니다.
 - [TOAST UI Editor Docs](https://ui.toast.com/tui-editor)
 - [DOMPurify Docs](https://github.com/cure53/DOMPurify)
 - [MDN CSP 가이드](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
