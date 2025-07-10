@@ -5,13 +5,13 @@ TOAST UI Editor 관련 내용 중 실 사용된 부분을 정리한 내용입니
 ## [ 목차 ]
 
 1. [소개](#white_check_mark-1-소개)
-2. [설치](#2-설치)
-3. [언어 설정](#3-언어-설정)
-4. [플러그인](#4-플러그인plugin)
-5. [툴바](#5-툴바-설정toolbar)
-6. [메서드](#6-메소드methods)
-7. [보안 필터링](#7-보안-필터링sanitizer)
-8. [이미지 업로드](#8-이미지-업로드)
+2. [설치](#white_check_mark-2-설치)
+3. [언어 설정](#white_check_mark-3-언어-설정)
+4. [플러그인](#white_check_mark-4-플러그인plugin)
+5. [툴바](#white_check_mark-5-툴바-설정toolbar)
+6. [메서드](#white_check_mark-6-메소드methods)
+7. [보안 필터링](#white_check_mark-7-보안-필터링sanitizer)
+8. [이미지 업로드](#white_check_mark-8-이미지-업로드)
 
 <br><br><br>
 
@@ -80,7 +80,7 @@ Toast UI Editor는 두가지 언어를 함께 사용하기 때문에 Markdown �
 
 <br><br><br>
 
-## 2. 설치
+## :white_check_mark: 2. 설치
 
 ### 1) 에디터 설치
 
@@ -145,7 +145,7 @@ TOAST UI Editor는 CDN을 통해 사용할 수 있습니다.
 </details>
 <br>
 
-### ❗ 현재 최신 버전이 아닌 3.1.5 버전 사용 중 ❗ 
+### :fire: 현재 최신 버전이 아닌 3.1.5 버전 사용 중
 
 2025년 07월 기준, 토스트 에디터의 3.2.0 버전부터 *표 안의 셀을 드레그 시 오류가 발생*하고 있습니다.  
 
@@ -216,7 +216,7 @@ const editor = new Editor({
 &nbsp;+ ) 더 많은 옵션과 메서드는 [여기](https://nhn.github.io/tui.editor/latest/ToastUIEditor)서 확인 가능합니다.
 <br><br><br>
 
-## 3. 언어 설정
+## :white_check_mark: 3. 언어 설정
 
 TOASE UI Editor는 총 22가지의 언어를 지원합니다.  
 
@@ -290,7 +290,7 @@ const editor = new Editor({
 ```
 <br><br><br>
 
-## 4. 플러그인(Plugin)
+## :white_check_mark: 4. 플러그인(Plugin)
 
 토스트 에디터는 플러그인을 적용하여 커스텀마이징이 가능합니다.  
 
@@ -300,15 +300,15 @@ const editor = new Editor({
 
 | 플러그인 명 | 파일 경로 | 설명 |
 |:----|:----|:----|
-| [table-merged-cell](###TableMergedCell) | /src/toast/src/plugin-tableMergedCell.min.js | 병합 테이블 셀을 사용하기 위한 플러그인 |
-| color-syntax | /src/toast/src/plugin-colorSyntax.min.js | 컬러피커 사용을 위한 플러그인 |
-| code-syntax-highlight | /src/toast/src/plugin-codeSyntaxHighlightAll.min.js | 코드 하이라이팅을 위한 플러그인 |
+| `table-merged-cell` | /src/toast/src/plugin-tableMergedCell.min.js | 병합 테이블 셀을 사용하기 위한 플러그인 |
+| `color-syntax` | /src/toast/src/plugin-colorSyntax.min.js | 컬러피커 사용을 위한 플러그인 |
+| `code-syntax-highlight` | /src/toast/src/plugin-codeSyntaxHighlightAll.min.js | 코드 하이라이팅을 위한 플러그인 |
 
 ### 1) 플러그인 설치
 
-플러그인은 npm을 통해 설치하거나 cdn 형태로 사용할 수 있습니다.  
+플러그인은 npm을 통해 설치하거나 CDN 형태로 사용할 수 있습니다.  
 
-editor를 설치할 때 포함되어 있지 않기 때문에 따로 설치하여야 하며, 반드시 **editor가 먼저 선언**된 상태여야 합니다.  
+에디터를 설치할 때 포함되어 있지 않기 때문에 따로 설치하여야 하며, 반드시 **editor가 먼저 선언**된 상태여야 합니다.  
 
 
 <details>
@@ -421,7 +421,7 @@ Toast UI Editor의 플러그인은 설정 방식이 각각 다르고 또한 다�
 이에, 자세한 내용은 [Toast_UI_Editor_Plugin.md]()에 별도로 설명을 기재하였습니다.  
 <br><br><br>
 
-## 5. 툴바 설정(Toolbar)
+## :white_check_mark: 5. 툴바 설정(Toolbar)
 
 Toast UI Editor에서는 heading, bold, italic 등 총 16개의 옵션과 스크롤싱크를 기본 적으로 제공합니다.  
 
@@ -690,7 +690,7 @@ const editor = new Editor({
 
 <br><br><br>
 
-## 6. 메소드(Methods)
+## :white_check_mark: 6. 메소드(Methods)
 
 Toast UI Editor는 정적 메소드(Static Methods)와 인스턴스 메소드(Instance Methods)를 제공합니다.  
 
@@ -727,7 +727,7 @@ const dirty = editor.getMarkdown();
 토스트 에디터에서는 `toast-editor-viewer`를 따로 제공하고있습니다.
 
 <details>
-<summary>Toast UI Editor Viewer</summary>
+<summary>:eyes: Toast UI Editor Viewer</summary>
 
 ***
 TOASE UI Editor(이하 'Editor'라고 명시)는 에디터를 로딩하지 않고 마크다운 콘텐츠를 보여줄 수 있도록 뷰어를 제공합니다.  
@@ -780,7 +780,6 @@ Viewer의 더 많은 옵션은 [여기](https://nhn.github.io/tui.editor/latest/
 
 그래서, 에디터 라이브러리를 가져와 Viewer로 보여주는 `factory()` 메소드를 사용한 것입니다. 
 
-
 현재 프로젝트에서 작성된 코드는 다음과 같으며, `viewer: true`로 설정하면 뷰어가 생성됩니다. 
 
 ```js
@@ -799,7 +798,7 @@ new Editor.factory({
 ```
 <br><br><br>
 
-## 7. 보안 필터링(sanitizer)
+## :white_check_mark: 7. 보안 필터링(sanitizer)
 
 Toast UI Editor는 `마크다운(Markdown)` 모드와 `위지윅(WYSIWYG)` 두 모드를 함께 제공하는 만큼 이 둘 버전을 동기화 시켜주는 렌더러가 존재합니다.  
 
@@ -815,7 +814,7 @@ Viewer로 보여주지 않는다면 에디터에서 제공하는 최소한의 Sa
 
 <br><br><br>
 
-## 8. 이미지 업로드
+## :white_check_mark: 8. 이미지 업로드
 
 Toast UI Editor는 이미지 업로드 버튼은 존재하지만 기능은 비워져 있습니다.  
 
@@ -898,7 +897,7 @@ const editor = new toastui.Editor({
 </details>
 <br>
 
-
+### :hammer_and_wrench: 3) 수정 필요
 저는 실제 사용하는 서버가 없고, `Toast Image Editor`를 사용하여 불러온 이미지를 편집까지 한 뒤 에디터에 포함시키고 싶었기 때문에 다음과 같은 로직을 만들었지만, 실제로 사용할 경우 로직의 수정이 필요할 것으로 예상됩니다.  
 
 아래는 현재 프로젝트에서 사용된 로직코드의 일부입니다.  
