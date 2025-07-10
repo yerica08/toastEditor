@@ -2,18 +2,18 @@
 
 TOAST UI Editor 관련 내용 중 실 사용된 부분을 정리한 내용입니다.
 
-## 목차
+## [ 목차 ]
 
-1. [소개](##1.소개)
-2. [설치](##2.설치)
-3. [언어 설정](##3.언어설정)
-4. [플러그인](##4.플러그인(Plugin))
-5. [툴바](##5.툴바(Toolbar))
-6. [메서드](##6.메서드(Methodes))
-7. [보안 필터링](##7.보안필터링(sanitizer))
-8. [이미지 업로드](##8.이미지업로드)
+1. [소개](#1-소개)
+2. [설치](#2-설치)
+3. [언어 설정](#3-언어-설정)
+4. [플러그인](#4-플러그인plugin)
+5. [툴바](#5-툴바-설정toolbar)
+6. [메서드](#6-메소드methods)
+7. [보안 필터링](#7-보안-필터링sanitizer)
+8. [이미지 업로드](#8-이미지-업로드)
 
-<br>
+<br><br><br>
 
 ## 1. 소개
 
@@ -78,7 +78,7 @@ Toast UI Editor는 두가지 언어를 함께 사용하기 때문에 Markdown �
 
 더 자세한 내용은 [7. 보안 필터링](##7.보안필터링(sanitizer))을 참고 바랍니다.
 
-<br>
+<br><br><br>
 
 ## 2. 설치
 
@@ -214,7 +214,7 @@ const editor = new Editor({
 - `hooks`: 객체. 현재 [addimageBlobHook](##6.addimageBlobHook)라는 이미지 업로드 후크만 존재.
 
 &nbsp;+ ) 더 많은 옵션과 메서드는 [여기](https://nhn.github.io/tui.editor/latest/ToastUIEditor)서 확인 가능합니다.
-<br>
+<br><br><br>
 
 ## 3. 언어 설정
 
@@ -288,7 +288,7 @@ const editor = new Editor({
     language: 'ko-KR'
 });
 ```
-<br>
+<br><br><br>
 
 ## 4. 플러그인(Plugin)
 
@@ -419,7 +419,7 @@ const editor = new Editor({
 Toast UI Editor의 플러그인은 설정 방식이 각각 다르고 또한 다른 컴포넌트와 종속성을 가지고 있어 사용하고자 하는 플러그인 외의 API를 설치해야할 수도 있습니다.  
 
 이에, 자세한 내용은 [Toast_UI_Editor_Plugin.md]()에 별도로 설명을 기재하였습니다.  
-<br>
+<br><br><br>
 
 ## 5. 툴바 설정(Toolbar)
 
@@ -688,8 +688,7 @@ const editor = new Editor({
 
 관련 내용은 [여기](https://github.com/nhn/tui.editor/blob/master/docs/ko/widget.md)서 확인할 수 있습니다.
 
-
-<br>
+<br><br><br>
 
 ## 6. 메소드(Methods)
 
@@ -798,7 +797,7 @@ new Editor.factory({
    plugins: [tableMergedCell, codeSyntaxHighlight, colorSyntax], // 플러그인 추가
 });
 ```
-<br>
+<br><br><br>
 
 ## 7. 보안 필터링(sanitizer)
 
@@ -814,7 +813,7 @@ Viewer로 보여주지 않는다면 에디터에서 제공하는 최소한의 Sa
 
 더 자세한 내용은 [여기](https://github.com/yerica08/toastEditor/blob/main/README.md)서 확인하실 수 있습니다.  
 
-<br>
+<br><br><br>
 
 ## 8. 이미지 업로드
 
