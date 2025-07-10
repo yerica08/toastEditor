@@ -4,7 +4,7 @@ TOAST UI Editor 관련 내용 중 실 사용된 부분을 정리한 내용입니
 
 ## [ 목차 ]
 
-1. [소개](#1-소개)
+1. [소개](#white_check_mark-1-소개)
 2. [설치](#2-설치)
 3. [언어 설정](#3-언어-설정)
 4. [플러그인](#4-플러그인plugin)
@@ -15,7 +15,7 @@ TOAST UI Editor 관련 내용 중 실 사용된 부분을 정리한 내용입니
 
 <br><br><br>
 
-## 1. 소개
+## :white_check_mark: 1. 소개
 
 - [TOAST UI](https://ui.toast.com/)
 - [TOAST UI Editor](https://ui.toast.com/tui-editor)
