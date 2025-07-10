@@ -441,7 +441,7 @@ const editor = new Editor({
 
 Toast UI Editor의 플러그인은 설정 방식이 각각 다르고 또한 다른 컴포넌트와 종속성을 가지고 있어 사용하고자 하는 플러그인 외의 API를 설치해야할 수도 있습니다.  
 
-이에, 자세한 내용은 [Toast_UI_Editor_Plugin.md]()에 별도로 설명을 기재하였습니다.  
+이에, 자세한 내용은 [Toast_UI_Editor_Plugin.md](https://github.com/yerica08/toastEditor/blob/main/docs/Toast_UI_Editor_Plugin.md)에 별도로 설명을 기재하였습니다.  
 <br><br><br>
 
 ## :white_check_mark: 5. 툴바 설정(Toolbar)
@@ -723,7 +723,7 @@ const editor = new Editor({
 
 Toast UI Editor는 `정적 메소드(Static Methods)`와 `인스턴스 메소드(Instance Methods)`를 제공합니다.  
 
-더 자세한 메소드 관련 설명은 [여기]()에서 확인 할 수 있으며, [Toast_UI_Editor_Methods.md]()에도 정리 중에 있습니다.
+더 자세한 메소드 관련 설명은 [여기](https://nhn.github.io/tui.editor/latest/ToastUIEditorCore)에서 확인 할 수 있으며, [Toast_UI_Editor_Methods.md](https://github.com/yerica08/toastEditor/blob/main/docs/Toast_UI_Editor_Methods.md)에도 정리 중에 있습니다.
 
 먼저 현재 프로젝트에서 사용된 메소드를 설명하겠습니다. 
 
@@ -945,7 +945,7 @@ const editor = new toastui.Editor({
 
 아래는 현재 프로젝트에서 사용된 로직코드의 일부입니다.  
 
-더 자세한 내용은 [Toast_Image_Editor.md]]()에서 확인 가능합니다.
+더 자세한 내용은 [Toast_Image_Editor.md](https://github.com/yerica08/toastEditor/blob/main/docs/Toast_Image_Editor.md)에서 확인 가능합니다.
 
 ```js
 // 이미지 에디터 미리 만들어놓기
